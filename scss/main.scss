@@ -1,0 +1,654 @@
+// mixins
+@mixin niceBorder ($col:inherit){
+    border: 2px solid $col;
+    border-radius: 5px;
+};
+
+@mixin flexy($hoz:center, $ver: center){
+    display: flex;
+    justify-content: $hoz;
+    align-items: $ver;
+    @content
+};
+
+@mixin gridContainer ($col-sizes, $row-sizes, $gap:null) {
+    display: grid;
+    grid-template-columns: $col-sizes;
+    grid-template-rows: $row-sizes;
+    grid-gap: $gap;
+};
+
+@keyframes shake {
+    0%{
+        transform:rotate(0deg);
+    };
+    20% {
+        transform: rotate(20deg);
+    };
+    40% {
+        transform: rotate(-20deg);
+    };
+    60% {
+        transform: rotate(20deg);
+    };
+    80% {
+        transform: rotate(-20deg);
+    };
+}
+
+@keyframes growHide {
+    0%{
+        transform: scale(0);
+    }
+    7%{
+        transform: scale(1.1)
+    }
+    10%{
+        transform: scale(1)
+    }
+    90%{
+        transform: scale(1)
+    }
+    100%{
+        transform: scale(0)
+    }
+}
+
+// variables
+$main-color: rgb(102, 102, 153);
+$main-color-dk: darken($main-color, 30%);
+$offwhite: #f3f3f3;
+$main-color-green: #5a5;
+
+
+//base styles
+*{
+    font-family: 'Lato', sans-serif;
+    box-sizing: border-box;
+    color: #888;
+}
+svg {
+    transform-box: fill-box;
+    transform-origin: 50% 0%;
+}
+h4,
+p {
+    margin: 0;
+}
+
+body{
+    display: grid;
+    width: 100%;
+    height: 100vh;
+    margin: none;
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: 80px 1fr;
+    grid-template-areas: 
+        "header header"
+        "nav main";
+}
+
+header{
+    grid-area: header;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $main-color;
+    & *{
+        color: $offwhite;
+    }
+    h2 {
+        font-weight: bolder;
+        text-shadow: 2px;
+        margin: auto auto auto 0px;
+    }
+    span {
+        font-weight: 100;
+        text-shadow: none;
+    }
+}
+.user-area{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#notification {
+    height: 25px;
+    width: 25px;
+    fill: $offwhite;
+    position: relative;
+    z-index: 99;
+    &.active::after {
+        position: absolute;
+        content: "";
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        left: 22px;
+        background: $main-color-green;
+    }
+    svg:hover{
+        animation: shake .5s ease-in-out backwards;
+    }
+}
+.notice-div{
+    position: absolute;
+    left: 15%;
+    background: $main-color-green;
+    color: #ddd;
+    z-index: 999;
+}
+.user-profile{
+    margin-left: 15px;
+    padding-left: 15px;
+    img{
+        height: 35px;
+        width: 35px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    h6{
+        margin: 0;
+    }
+    display: flex;
+    align-items: center;
+    border-left: 1px solid $main-color-dk;
+}
+.logged-in{
+    cursor: pointer;
+}
+
+
+
+nav {
+    grid-area: nav;
+    display: flex;
+    flex-direction: column;
+    background: $main-color-dk;
+    align-items: center;
+    a{
+        display: block;
+        width: 35px;
+        height: 35px;
+        margin: 20px auto 15px auto;
+        fill: $offwhite;
+        opacity: .5;
+        transition: .25s ease-out;
+        &:hover{
+            opacity: 1;
+            transform: scale(1.15);
+        }
+    }
+    svg{
+        height: 100%;
+        width: 100%;
+    }
+}
+
+main{
+    grid-area: main;
+}
+
+.title{
+    display: flex;
+    h3{
+        color: #888;
+        margin: 15px 15px 0 15px;
+    }
+}
+
+#dashboard {
+    width: 85%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    background: $offwhite;
+    margin-left: auto;
+    input{
+        @include niceBorder(#eee);
+        width: 45%;
+        font-size: 1em;
+        padding: 4px;
+        position: relative;
+        float: right;
+        color: #bbb;
+    }
+    button{
+        float: right;
+        position: relative;
+        left: 45%;
+        height: 30px;
+        width: 30px;
+        background: none;
+        border: none;
+        fill: #999;
+        &:hover .search-icon{
+            fill: #777;
+        }
+    }
+}
+
+.alert-message {
+    & *{
+        color: $offwhite;
+    }
+    display: flex;
+    align-items: center;
+    background: $main-color;
+    border-radius: 5px;
+    margin: 15px;
+    padding: 10px 15px;
+    h4{
+        margin-right: 10px;
+    }
+    .closeButton {
+        margin-left: auto;
+        background: none;
+        border: none;
+    }
+}
+.charts{
+    h4{
+        padding-bottom: 15px;
+        align-self: center;
+    }
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(250px 400px) minmax(250px 400px);
+    grid-template-areas:
+    "traffic traffic"
+    "daily mobile";
+    grid-gap: 15px;
+}
+
+.traffic {
+    padding: 15px;
+    .heading{
+        display: flex;
+    }
+    grid-area: traffic;
+}
+.traffic-list {
+    margin-left: auto;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    li{
+        height: 25px;
+        padding: 0 15px;
+        margin-right: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:hover{
+            border-radius: 5px;
+            background: $main-color-green;
+        }
+        &:hover a{
+            color: $offwhite;
+        }
+    }
+    a{
+        text-decoration: none;
+        color: #888;
+        
+    }
+}
+
+.daily{
+    grid-area: daily;
+    padding: 15px;
+}
+
+.mobile{
+    grid-area: mobile;
+    padding: 15px;
+}
+
+.social{
+    padding: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 30px 100px;
+    grid-gap: 15px;
+    h4{
+        margin: 0;
+        grid-area: head;
+    }
+    .twitter{
+    grid-area: twitter;
+    }
+    .facebook{
+        grid-area: facebook;
+    }
+    .google{
+        grid-area: google;
+    }
+    grid-template-areas: 
+        "head head head"
+        "twitter facebook google";
+}
+
+
+.card{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include niceBorder(#ddd);
+    background: #f3f3f3;
+    .svg-wrap{
+        background: $main-color;
+        height: 45px;
+        width: 45px;
+        border-radius: 50%;
+        @include flexy();
+    }
+    svg {
+        fill: $offwhite;
+        height: 20px;
+        width: 20px;
+        
+    }
+    div{
+        margin-left: 10px;
+    }
+    span {
+        color: $main-color;
+        font-weight: bolder;
+        font-size: .8em;
+    }
+    p{
+        margin: 0;
+        font-size: 2em;
+        line-height: 0.85;
+    }
+}
+
+aside{
+    @include gridContainer(50% 50%, minmax(250px, auto) minmax(250px, auto));
+    grid-template-areas: 
+        "newMembers recentActivity"
+        "messageBox settings";
+    .newMembers{
+        grid-area: newMembers;
+    }
+    .recentActivity{
+        grid-area: recentActivity;
+    }
+    .messageBox{
+        grid-area: messageBox;
+    }
+    .settings{
+        grid-area: settings;
+    }
+}
+
+.panel{
+    padding: 15px;
+    border: 1px solid #ddd;  
+    * {
+        font-size: .65rem;
+    }
+}
+
+.member-list,
+.recent-list {
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 50px;
+    li {
+        list-style: none;
+        @include flexy(space-between, center);
+        // padding: 10px 0;
+        &:nth-child(n+2) {
+            border-top: 1px solid #bbb;
+        };
+        img {
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+        };
+        div{
+            margin-left: 10px;
+            margin-right: auto;
+            
+        }
+        p {
+            margin: 2px 0;        
+        }
+        .top-line{
+            
+        }
+        #arrow{
+            font-size: 1.5em;
+            // margin: 0;
+        }
+    }
+}   
+
+.messageBox,
+.settings {
+    @include flexy(null, null) {
+        flex-direction: column;
+    }
+}
+
+.messageBox{
+    form{
+        margin: 0;
+        background: transparent;
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        
+        padding: 0;
+    }
+    input {
+        @include niceBorder(#ddd);
+        width: 100%;
+        background: #fafafa;
+        color: #999;
+        margin-bottom: 10px;
+        padding: 7px;
+    }
+    #user-message{
+        height: 100px;
+    };
+    .send-button{
+        background: $main-color;
+        color: $offwhite;
+        border: none;
+        border-radius: 5px;
+        height: 40px;
+        margin-top: auto;
+    };
+    .autocomplete {
+    /*the container must be positioned relative:*/
+    width:100%;
+    position: relative;
+    display: inline-block;
+    };
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #ddd;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+        transform: translateY(-10px);
+        // border-radius: 0 5px 5px 0;
+    }
+
+    .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .autocomplete-items div:hover {
+        /*when hovering an item:*/
+        background-color: #eee;
+    }
+
+    .autocomplete-active {
+        /*when navigating through the items using the arrow keys:*/
+        background-color: $main-color-dk !important;
+        color: $offwhite;
+    }
+}
+.pop-up-holder{
+    position: relative;
+}
+.pop-up{
+    position: absolute;
+    border: none;
+    z-index: 999; 
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    background: $main-color;
+    border-radius: 5px;
+    animation: growHide 3s forwards;
+    padding: 10px;
+    @include flexy{
+        
+    };
+    h4{
+        color: #eee;
+        font-size: 1.5em;
+        // margin: auto;
+    }
+}
+
+
+
+.settings {
+    .setting-section{
+        width: 75%;
+    }
+    .setting-card{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        & + .setting-card{
+            margin-top: 10px;
+        };
+        label{
+            font-size: 1em;
+        }
+    }
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 70px;
+        height: 30px;
+    }
+
+    .switch input {
+        display: none;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: $main-color;
+        -webkit-transition: .4s;
+        transition: .4s;
+        width: 70px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 3px;
+        bottom: 3px;
+        background-color: $offwhite;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+    input:checked+.slider {
+        background-color: $main-color-green;
+    }
+
+    input:checked+.slider:before {
+        // -webkit-transform: translateX(40px);
+        // -ms-transform: translateX(40px);
+        transform: translateX(40px);
+    }
+
+    .on,
+    .off {
+        color: $offwhite;
+        position: absolute;
+        top: 50%;
+        font-size: 10px;
+        font-family: Verdana, sans-serif;
+    }
+
+    .on{
+        transform: translate(-50%, -50%);
+        left: 30%;
+        display: none;
+    }
+    .off{
+        transform: translate(-50%, -50%);
+        left: 70%;
+    }
+
+    input:checked+.slider .on {
+        display: block;
+    }
+
+    input:checked+.slider .off {
+        display: none;
+    }
+// round feature
+    .slider.round {
+        border-radius: 15px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+    
+
+
+    select{
+        margin: auto 0 10px 0;
+        padding: 10px;
+        @include niceBorder(#ddd);
+    };
+
+    #buttons{
+        display: flex;
+        justify-content: space-between;
+    }
+    button{
+        border: none;
+        border-radius: 5px;
+        color: $offwhite;
+        height: 40px;
+        width: 48%;
+    };
+    & button[type="submit"]{
+        background: $main-color;
+    };
+    & button[type="reset"] {
+        background: #888;
+    };
+}
