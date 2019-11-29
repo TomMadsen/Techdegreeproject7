@@ -93,25 +93,25 @@
                 <div class="heading">
                     <h4>TRAFFIC</h4>
                     <ul class="traffic-list">
-                        <li><a href="#">Hourly</a></li>
-                        <li><a href="#">Daily</a></li>
-                        <li><a href="#">Weekly</a></li> <!-- force an active state on this item -->
-                        <li><a href="#">Monthly</a></li>
+                        <li id="hrButton">Hourly</li>
+                        <li id="dyButton">Daily</li>
+                        <li id="wkButton">Weekly</li> <!-- force an active state on this item -->
+                        <li class="selected" id="mthButton">Monthly</li>
                     </ul>
                 </div>
-                <div>
+                <div class="chart-container" style="position: relative" id="chart-panel">
                     <canvas id="traffic-chart"></canvas>
                 </div>
             </section>
             <section class="daily chart">
                 <h4>DAILY TRAFFIC</h4>
-                <div>
+                <div class="chart-container" style="position: relative">
                     <canvas id="daily-traffic"></canvas>
                 </div>
             </section>
             <section class="mobile chart">
                 <h4>MOBILE USERS</h4>
-                <div>
+                <div class="chart-container" style="position: relative">
                     <canvas id="mobile-users"></canvas>
                 </div>
             </section>
@@ -187,7 +187,7 @@
                     <div class="autocomplete">
                         <input id="user-search" type="search" placeholder="Search for User">
                     </div>
-                    <input id="user-message" type="textbox" placeholder="Message for User">
+                    <input id="user-message" type="text" placeholder="Message for User">
                 <button class="send-button" type="submit">SEND</button>
                 </form>
             </div>
@@ -198,20 +198,20 @@
                         <label for="email-notify">Send Email Notifications</label>
                         <label class="switch">
                             <input type="checkbox" id="email-notify">
-                            <div class="slider round">
+                            <span class="slider round">
                                 <span class="on">ON</span>
                                 <span class="off">OFF</span>
-                            </div>
+                            </span>
                         </label>
                     </div>
                     <div class="setting-card" id="settings">
-                        <label for="public-profile">Set Profile to Public</label>
+                        <label for="go-public">Set Profile to Public</label>
                         <label class="switch">
                             <input type="checkbox" id="go-public">
-                            <div class="slider round">
+                            <span class="slider round">
                                 <span class="on">ON</span>
                                 <span class="off">OFF</span>
-                            </div>
+                            </span>
                         </label>
                     </div>
                 </div> <!-- /setting item -->
@@ -227,10 +227,10 @@
 
 
     </main>
-    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-    <script type="text/javascript" src="js/Chart.js"></script>
-    <script type="text/javascript" src='js/timezones.js'></script>
-    <script type="text/javascript" src='js/main.js'></script>    
+    <script  src="js/jquery-3.4.1.min.js"></script>
+    <script  src="js/Chart.js"></script>
+    <script  src='js/timezones.js'></script>
+    <script  src='js/main.js'></script>    
 </body>
  
 </html>

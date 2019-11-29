@@ -17,7 +17,28 @@
     grid-template-rows: $row-sizes;
     grid-gap: $gap;
 };
+@mixin mq($break) {
 
+    @if $break=='sm' {
+        @media (min-width: $break-sm) {
+            @content;
+        }
+    }
+
+    @else if $break=='med' {
+        @media (min-width: $break-med) {
+            @content;
+        }
+    }
+
+    @else if $break=='lg' {
+        @media (min-width: $break-lg) {
+            @content;
+        }
+    }
+}
+
+//keyframes
 @keyframes shake {
     0%{
         transform:rotate(0deg);
@@ -59,6 +80,9 @@ $main-color: rgb(102, 102, 153);
 $main-color-dk: darken($main-color, 30%);
 $offwhite: #f3f3f3;
 $main-color-green: #5a5;
+$break-sm: 320px;
+$break-med: 768px;
+$break-lg: 1024px;
 
 
 //base styles
@@ -77,15 +101,24 @@ p {
 }
 
 body{
-    display: grid;
-    width: 100%;
+    
+    max-width: 100%;
     height: 100vh;
-    margin: none;
-    grid-template-columns: 80px 1fr;
-    grid-template-rows: 80px 1fr;
-    grid-template-areas: 
-        "header header"
-        "nav main";
+    margin: 0;
+    @include mq(med){
+        display: grid;
+        grid-template-columns: minmax(80px, 10%) 90%;
+        grid-template-rows: 80px 1fr;
+        grid-template-areas:
+            "header header"
+            "nav main";
+    }
+    @include mq(lg){
+        max-width:85%;
+        margin: 0 auto;
+        background: #eee;
+        // border: 1px solid #ddd;
+    }
 }
 
 header{
@@ -100,7 +133,6 @@ header{
     }
     h2 {
         font-weight: bolder;
-        text-shadow: 2px;
         margin: auto auto auto 0px;
     }
     span {
@@ -134,22 +166,37 @@ header{
 }
 .notice-div{
     position: absolute;
-    left: 15%;
+    left: 30%;
     background: $main-color-green;
     color: #ddd;
     z-index: 999;
+    @include flexy(){
+        flex-direction: column;
+    };
+    padding: 15px;
+    border-radius: 10px;
+    & h4:nth-child(2){
+        margin-top: 10px;
+    }
 }
 .user-profile{
     margin-left: 15px;
     padding-left: 15px;
+    
     img{
         height: 35px;
         width: 35px;
         border-radius: 50%;
         margin-right: 10px;
-    }
+    }//grab the img back...
     h6{
-        margin: 0;
+        display: none;
+    }
+    @include mq(sm){
+        h6{
+            margin: 0;
+            display: inherit;
+        }
     }
     display: flex;
     align-items: center;
@@ -162,32 +209,41 @@ header{
 
 
 nav {
-    grid-area: nav;
     display: flex;
-    flex-direction: column;
+    height: 50px;
     background: $main-color-dk;
     align-items: center;
+    svg{
+            height: 100%;
+            width: 100%;
+        }
     a{
         display: block;
-        width: 35px;
-        height: 35px;
-        margin: 20px auto 15px auto;
-        fill: $offwhite;
-        opacity: .5;
-        transition: .25s ease-out;
-        &:hover{
-            opacity: 1;
-            transform: scale(1.15);
-        }
+            width: 35px;
+            height: 35px;
+            margin: 20px auto 15px auto;
+            fill: $offwhite;
+            opacity: .5;
     }
-    svg{
+    @include mq(med){  
         height: 100%;
-        width: 100%;
+        grid-area: nav;
+        flex-direction: column;
+        a{
+            transition: .25s ease-out;
+            &:hover{
+                opacity: 1;
+                transform: scale(1.15);
+            }
+        }
     }
 }
 
 main{
     grid-area: main;
+    @include mq(lg) {
+        background: #fff;
+    }
 }
 
 .title{
@@ -199,29 +255,41 @@ main{
 }
 
 #dashboard {
+
     width: 85%;
     padding: 15px;
     border: 1px solid #ddd;
     background: $offwhite;
     margin-left: auto;
+    height: 60px;       //added
     input{
         @include niceBorder(#eee);
-        width: 45%;
+        @include mq(sm) {
+        width: 75%;
         font-size: 1em;
+        }
+        @include mq(med){
+            width: 45%;
+        }
+        width: 90%;
         padding: 4px;
         position: relative;
         float: right;
         color: #bbb;
     }
     button{
-        float: right;
-        position: relative;
-        left: 45%;
+        // float: right;
+        cursor: pointer;
         height: 30px;
+        position: absolute;
         width: 30px;
         background: none;
         border: none;
         fill: #999;
+        right: 20px;
+        @include mq(lg) {
+            right: 9%;
+        }
         &:hover .search-icon{
             fill: #777;
         }
@@ -252,47 +320,68 @@ main{
         padding-bottom: 15px;
         align-self: center;
     }
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: minmax(250px 400px) minmax(250px 400px);
-    grid-template-areas:
-    "traffic traffic"
-    "daily mobile";
-    grid-gap: 15px;
+    @include mq(med){
+        display:grid;
+        max-width:100%;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+        "traffic traffic"
+        "daily mobile";
+    }
 }
+
 
 .traffic {
     padding: 15px;
-    .heading{
+    @include mq(med){
+        .heading{
         display: flex;
     }
     grid-area: traffic;
+    }
+    h4{
+        display: block;
+        @include mq(med){
+            display: inherit;
+        }
+    }
 }
 .traffic-list {
-    margin-left: auto;
     display: flex;
-    list-style: none;
-    align-items: center;
+    justify-content: space-evenly; //added
+    padding-left: 0;                //added
+    @include mq(med){
+        margin-left: auto;
+        list-style: none;
+        align-items: center;
+    }
     li{
         height: 25px;
+        @include mq(med) {
         padding: 0 15px;
-        margin-right: 20px;
+        }
         display: flex;
         align-items: center;
         justify-content: center;
-        &:hover{
-            border-radius: 5px;
-            background: $main-color-green;
+        border-radius: 5px;
+        @include mq(sm){
+            margin: 0 10px 0 10px;
+            float: right;
         }
-        &:hover a{
+        &.selected{
+            background: $main-color-green;
             color: $offwhite;
         }
     }
-    a{
-        text-decoration: none;
-        color: #888;
-        
+    li:hover{
+        background: $main-color-green;
+        color: $offwhite;
+        cursor: pointer;
     }
+}
+.chart-container{
+    max-width: 100%;
 }
 
 .daily{
@@ -307,13 +396,21 @@ main{
 
 .social{
     padding: 15px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 30px 100px;
-    grid-gap: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @include mq(med){
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 30px 100px;
+        grid-gap: 15px;
+    }
     h4{
-        margin: 0;
-        grid-area: head;
+        align-self: flex-start;
+        @include mq(sm) {
+            margin: 0;
+            grid-area: head;
+        }
     }
     .twitter{
     grid-area: twitter;
@@ -331,6 +428,12 @@ main{
 
 
 .card{
+    width: 80%; //added
+    margin: 10px 0;
+    @include mq(med){
+        width: 100%;
+        margin: 0;
+    }
     display: flex;
     align-items: center;
     justify-content: center;
@@ -365,10 +468,12 @@ main{
 }
 
 aside{
+    @include mq(med){
     @include gridContainer(50% 50%, minmax(250px, auto) minmax(250px, auto));
     grid-template-areas: 
         "newMembers recentActivity"
         "messageBox settings";
+    }
     .newMembers{
         grid-area: newMembers;
     }
@@ -385,10 +490,24 @@ aside{
 
 .panel{
     padding: 15px;
-    border: 1px solid #ddd;  
+    border: 1px solid #ddd;
     * {
         font-size: .65rem;
     }
+    margin: 0;
+    @include mq(sm) {
+        width: 85%;
+        margin-left: auto;
+        margin-right: auto;
+        border-left: none;
+        border-right: none;
+    }
+    @include mq(med){
+        margin: 0;
+        border: 1px solid #ddd;
+        width: 100%;
+    }
+    
 }
 
 .member-list,
@@ -443,8 +562,7 @@ aside{
         border: none;
         display: flex;
         flex-direction: column;
-        
-        padding: 0;
+        padding-bottom: 11px;
     }
     input {
         @include niceBorder(#ddd);
